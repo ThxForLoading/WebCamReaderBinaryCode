@@ -4,8 +4,19 @@ import streamlit as st
 
 st.title("Webcam Number Detection")
 
-# Open webcam
-cap = cv2.VideoCapture(0)
+# List available webcams (manually defined for now)
+webcam_options = {
+    "Default Webcam (0)": 0,
+    "External Webcam (1)": 1,
+    "Other Device (2)": 2
+}
+
+# User selects webcam
+selected_webcam = st.selectbox("Select Webcam", list(webcam_options.keys()))
+cam_index = webcam_options[selected_webcam]
+
+# Open the selected webcam
+cap = cv2.VideoCapture(cam_index)
 
 if "detected_number" not in st.session_state:
     st.session_state.detected_number = "No number detected yet"
