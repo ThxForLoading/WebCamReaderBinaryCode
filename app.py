@@ -7,6 +7,9 @@ st.title("Webcam Number Detection")
 # Open webcam
 cap = cv2.VideoCapture(0)
 
+if "detected_number" not in st.session_state:
+    st.session_state.detected_number = "No number detected yet"
+
 if st.button("Capture Frame"):
     ret, frame = cap.read()
     if ret:
@@ -15,9 +18,12 @@ if st.button("Capture Frame"):
         values = [gray[y, x] for x, y in points_of_interest]
         threshold = 128
         binary_values = [1 if val > threshold else 0 for val in values]
-        number = int("".join(map(str, binary_values)), 2)
+        detected_number = int("".join(map(str, binary_values)), 2)
 
         st.image(frame, channels="BGR")
-        st.write(f"Computed Number: {number}")
+        st.session_state.detected_number = f"Computed Number: {detected_number}"
 
 cap.release()
+
+# Display the detected number
+st.write(st.session_state.detected_number)
